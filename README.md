@@ -2,20 +2,24 @@
 
 This is a little utility I use for logging my daily activities and events. It is written in Python.
 
-Go ahead, make fun of me because this is "cringe". Whatever. I have the basilisks ready to deploy at the snap of my fingers, so you best watch yourself. 😾
-
 ## Install
-Clone this repo and copy the `elog` binary to PATH somewhere. 
 
-Also edit line 32 for your desired elog directory:
-
-```python
-elog_dir = Path("~/<your path>/elog").expanduser()
+```bash
+python3 -m pip install elog
 ```
 
 ## Usage
-![usage_screenshot.png](/usage_screenshot.png)
 
+```bash
+usage: elog [-h] [-v] {add,edit,rm,ls,lsfiles,search} ...
+
+positional arguments:
+  {add,edit,rm,ls,lsfiles,search}
+
+options:
+  -h, --help            show this help message and exit
+  -v, --version         Print version information
+```
 
 ### Example list output
 ![screenshot.png](/screenshot.png)

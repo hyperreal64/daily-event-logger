@@ -1,18 +1,7 @@
-#!/usr/bin/env python3
-
-# USAGE: elog [-h] [-v] {add,edit,rm,ls,lsfiles,search} ...
-#
-# positional arguments:
-#   {add,edit,rm,ls,lsfiles,search}
-#
-# options:
-#   -h, --help            show this help message and exit
-#   -v, --version         Print version information
-
-
 import argparse
 import datetime as dt
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -26,10 +15,14 @@ from rich.traceback import install
 
 install(show_locals=True)
 
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 
 default_date = dt.date.today().strftime("%Y-%m-%d")
-elog_dir = Path("~/Nextcloud/elogs").expanduser()
+ELOG_DIR = os.getenv("ELOG_DIR")
+if ELOG_DIR is None:
+    elog_dir = Path("~/elogs").expanduser()
+else:
+    elog_dir = Path(ELOG_DIR)
 elog_file = elog_dir.joinpath(default_date + "_elog").with_suffix(".json")
 
 
