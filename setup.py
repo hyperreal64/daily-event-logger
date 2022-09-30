@@ -2,17 +2,22 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name="elog",
-    version="0.0.2",
+    name="daily-event-logger",
+    version="0.0.3",
     license="GPL-3.0",
     author="Jeffrey Serio",
     author_email="hyperreal@fedoraproject.org",
     packages=find_packages("src"),
     package_dir={"": "src"},
-    url="https://github.com/hyperreal64/elog",
-    keywords="elog",
+    url="https://github.com/hyperreal64/daily-event-logger",
+    keywords="daily-event-logger",
     install_requires=[
         "jsonschema",
         "rich",
     ],
+    entry_points={
+        "console_scripts": [
+            "elog = elog",
+        ]
+    },
 )
