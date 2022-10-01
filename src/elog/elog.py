@@ -176,7 +176,6 @@ def elog_edit(args):
         ef.seek(0)
         json.dump(json_data, ef, indent=4)
 
-    elog_sort(elog_file)
     validate_json(elog_file)
 
 
@@ -191,7 +190,6 @@ def elog_remove(args):
     with open(elog_file, "w") as ef:
         json.dump(json_data, ef, indent=4)
 
-    elog_sort(elog_file)
     validate_json(elog_file)
 
 
