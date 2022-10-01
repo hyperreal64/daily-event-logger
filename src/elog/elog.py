@@ -15,7 +15,7 @@ from rich.traceback import install
 
 install(show_locals=True)
 
-VERSION = "0.0.7"
+VERSION = "0.0.8"
 
 default_date = dt.date.today().strftime("%Y-%m-%d")
 ELOG_DIR = os.getenv("ELOG_DIR")
