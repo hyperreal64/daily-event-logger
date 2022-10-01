@@ -15,7 +15,7 @@ from rich.traceback import install
 
 install(show_locals=True)
 
-VERSION = "0.0.2"
+VERSION = "0.0.7"
 
 default_date = dt.date.today().strftime("%Y-%m-%d")
 ELOG_DIR = os.getenv("ELOG_DIR")
@@ -309,7 +309,7 @@ search_parser.add_argument(
 search_parser.set_defaults(func=elog_search)
 
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) < 2:
         parser.print_usage()
     else:
