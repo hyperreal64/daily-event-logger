@@ -15,7 +15,7 @@ from rich.traceback import install
 
 install(show_locals=True)
 
-VERSION = "0.0.8"
+VERSION = "0.0.9"
 
 default_date = dt.date.today().strftime("%Y-%m-%d")
 ELOG_DIR = os.getenv("ELOG_DIR")
@@ -23,11 +23,10 @@ if ELOG_DIR is None:
     elog_dir = Path("~/elogs").expanduser()
 else:
     elog_dir = Path(ELOG_DIR)
-elog_file = elog_dir.joinpath(default_date + "_elog").with_suffix(".json")
 
 
-def elog_init():
-    elog_file = elog_dir.joinpath(default_date + "_elog").with_suffix(".json")
+def elog_init(filename):
+    elog_file = elog_dir.joinpath(filename).with_suffix(".json")
 
     elog_dir.mkdir(exist_ok=True)
     elog_file.touch()
@@ -42,13 +41,15 @@ def elog_list(args):
     if args.file:
         selected_elog_file = elog_dir.joinpath(args.file)
     else:
-        selected_elog_file = elog_file
+        selected_elog_file = elog_dir.joinpath(default_date + "_elog").with_suffix(
+            ".json"
+        )
 
     if not selected_elog_file.exists():
         exit("elog file %s not found. Are you sure it exists?" % selected_elog_file)
 
     if not args.start:
-        ts_from = default_date + " 00:00:00"
+        ts_from = selected_elog_file.stem[:10] + " 00:00:00"
     else:
         dt.datetime.strptime(args.start, "%Y-%m-%d %H:%M:%S")
         ts_from = args.start
@@ -145,14 +146,17 @@ def validate_json(file):
 
 
 def elog_append(args):
-    if not elog_file.exists():
-        elog_init()
-
     if not args.timestamp:
         ts = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     else:
         dt.datetime.strptime(args.timestamp, "%Y-%m-%d %H:%M:%S")
         ts = args.timestamp
+
+    elog_filename = ts[:10] + "_elog"
+    elog_file = elog_dir.joinpath(elog_filename).with_suffix(".json")
+
+    if not elog_file.exists():
+        elog_init(elog_file)
 
     entry = {"timestamp": ts, "message": args.message}
 
@@ -167,6 +171,11 @@ def elog_append(args):
 
 
 def elog_edit(args):
+    if args.file:
+        elog_file = elog_dir.joinpath(args.file)
+    else:
+        elog_file = elog_dir.joinpath(default_date + "_elog").with_suffix(".json")
+
     if not elog_file.exists():
         exit("elog file not found. Please run 'elog append' to start a new elog file.")
 
@@ -180,6 +189,11 @@ def elog_edit(args):
 
 
 def elog_remove(args):
+    if args.file:
+        elog_file = elog_dir.joinpath(args.file)
+    else:
+        elog_file = elog_dir.joinpath(default_date + "_elog").with_suffix(".json")
+
     if not elog_file.exists():
         exit("elog file not found. Please run 'elog append' to start a new elog file.")
 
@@ -239,6 +253,14 @@ edit_parser.add_argument(
     action="store",
     help="New message for elog entry: str",
 )
+edit_parser.add_argument(
+    "-f",
+    "--file",
+    required=False,
+    type=str,
+    action="store",
+    help="elog file to edit. Ex: 2022-10-02_elog.json",
+)
 edit_parser.set_defaults(func=elog_edit)
 
 rm_parser = subparsers.add_parser("rm", description="Remove an elog entry")
@@ -250,13 +272,21 @@ rm_parser.add_argument(
     action="store",
     help="Index of elog entry: int",
 )
+rm_parser.add_argument(
+    "-f",
+    "--file",
+    required=False,
+    type=str,
+    action="store",
+    help="elog file to remove from. Ex: 2022-10-02_elog.json",
+)
 rm_parser.set_defaults(func=elog_remove)
 
 ls_parser = subparsers.add_parser("ls", description="List elog entries")
 ls_parser.add_argument(
     "-s",
     "--start",
-    metavar="timestamp",
+    metavar="TIMESTAMP",
     required=False,
     type=str,
     action="store",
@@ -265,7 +295,7 @@ ls_parser.add_argument(
 ls_parser.add_argument(
     "-e",
     "--end",
-    metavar="timestamp",
+    metavar="TIMESTAMP",
     required=False,
     type=str,
     action="store",
@@ -274,11 +304,10 @@ ls_parser.add_argument(
 ls_parser.add_argument(
     "-f",
     "--file",
-    metavar="elog file",
     required=False,
     type=str,
     action="store",
-    help="elog file to view",
+    help="elog file to view. Ex: 2022-10-02_elog.json",
 )
 ls_parser.set_defaults(func=elog_list)
 
@@ -298,7 +327,6 @@ search_parser = subparsers.add_parser(
 search_parser.add_argument(
     "-w",
     "--word",
-    metavar="<word>",
     required=True,
     type=str,
     action="store",
