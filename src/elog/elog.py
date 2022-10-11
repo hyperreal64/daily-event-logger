@@ -15,7 +15,7 @@ from rich.traceback import install
 
 install(show_locals=True)
 
-VERSION = "0.0.9"
+VERSION = "0.0.10"
 
 default_date = dt.date.today().strftime("%Y-%m-%d")
 ELOG_DIR = os.getenv("ELOG_DIR")
@@ -26,6 +26,8 @@ else:
 
 
 def elog_init(filename):
+    """Initializes elog file and directory (if necessary)"""
+
     elog_file = elog_dir.joinpath(filename).with_suffix(".json")
 
     elog_dir.mkdir(exist_ok=True)
@@ -38,6 +40,8 @@ def elog_init(filename):
 
 
 def elog_list(args):
+    """List elog entries for provided timestamp range and/or elog file"""
+
     if args.file:
         selected_elog_file = elog_dir.joinpath(args.file)
     else:
@@ -63,9 +67,9 @@ def elog_list(args):
     with open(selected_elog_file, "r") as ef:
         json_data = json.load(ef)
 
-    table = Table(title=default_date, box=box.ROUNDED)
+    table = Table(style="yellow", header_style="bold", box=box.ROUNDED)
     table.add_column("Index", justify="right", style="magenta")
-    table.add_column("Timestamp", justify="left", style="cyan")
+    table.add_column("Timestamp", justify="left", style="dim")
     table.add_column("Message", justify="left")
 
     for i in range(len(json_data)):
@@ -77,7 +81,9 @@ def elog_list(args):
 
 
 def elog_list_files(args):
-    for file in elog_dir.iterdir():
+    """Lists all elog files in elog directory"""
+
+    for file in sorted(elog_dir.iterdir()):
         if file.is_file():
             if args.absolute:
                 print(file)
@@ -86,6 +92,8 @@ def elog_list_files(args):
 
 
 def elog_search(args):
+    """Search for a string in all elog files and print the result."""
+
     found_entries = list()
     elog_list = [file.name for file in elog_dir.iterdir()]
 
@@ -114,6 +122,8 @@ def elog_search(args):
 
 
 def elog_sort(file):
+    """Sort elog entries by timestamp in provided `file`"""
+
     with open(file, "r") as ef:
         json_data = json.load(ef)
         json_data.sort(
@@ -127,6 +137,8 @@ def elog_sort(file):
 
 
 def validate_json(file):
+    """Validate JSON data in provided `file`"""
+
     elog_schema = {
         "type": "array",
         "properties": {
@@ -146,6 +158,11 @@ def validate_json(file):
 
 
 def elog_append(args):
+    """
+    Append a new elog entry to the elog file indicated by provided timestamp.
+    Else append to the elog file for current day
+    """
+
     if not args.timestamp:
         ts = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     else:
@@ -171,6 +188,8 @@ def elog_append(args):
 
 
 def elog_edit(args):
+    """Edit elog entry at provided index argument"""
+
     if args.file:
         elog_file = elog_dir.joinpath(args.file)
     else:
@@ -189,6 +208,8 @@ def elog_edit(args):
 
 
 def elog_remove(args):
+    """Remove an elog entry at provided index argument"""
+
     if args.file:
         elog_file = elog_dir.joinpath(args.file)
     else:
