@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "daily-event-logger"
+version = "0.1.3"
+description = "A utility for logging daily tasks and events."
+authors = ["Jeffrey Serio <hyperreal@fedoraproject.org>"]
+license = "GPL-3.0-or-later"
+homepage = "https://github.com/hyperreal64/daily-event-logger"
+readme = "README.md"
+repository = "https://github.com/hyperreal64/daily-event-logger"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+jsonschema = "^4.17.0"
+rich = "^12.6.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2"
+black = "^22.10.0"
+flake8 = "^5.0.4"
+
+[tool.poetry.scripts]
+elog = "daily_event_logger.elog:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[flake8]
+max-line-length = 88
+extend-ignore = "E203"
