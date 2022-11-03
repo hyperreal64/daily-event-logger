@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="daily-event-logger",
-    version="0.0.13",
+    version="0.1.0",
     license="GPL-3.0",
     author="Jeffrey Serio",
     author_email="hyperreal@fedoraproject.org",

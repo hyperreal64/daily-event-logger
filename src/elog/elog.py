@@ -1,3 +1,5 @@
+"""elog - daily event logger."""
+
 import argparse
 import datetime as dt
 import json
@@ -15,7 +17,7 @@ from rich.traceback import install
 
 install(show_locals=True)
 
-VERSION = "0.0.13"
+VERSION = "0.1.0"
 
 default_date = dt.date.today().strftime("%Y-%m-%d")
 ELOG_DIR = os.getenv("ELOG_DIR")
@@ -72,10 +74,10 @@ def elog_list(args):
     with open(selected_elog_file, "r") as ef:
         json_data = json.load(ef)
 
-    table = Table(style="#8700ff", header_style="bold", box=box.ROUNDED)
-    table.add_column("Index", justify="right", style="#ffff00")
-    table.add_column("Timestamp", justify="left", style="#ff8700")
-    table.add_column("Message", justify="left")
+    table = Table(style="#84562c", header_style="bold", box=box.ROUNDED)
+    table.add_column("Index", justify="right", style="#fb4934")
+    table.add_column("Timestamp", justify="left", style="#d62b00")
+    table.add_column("Message", justify="left", style="#e3d499")
 
     for i in range(len(json_data)):
         if json_data[i]["timestamp"] > ts_from and json_data[i]["timestamp"] < ts_to:
@@ -357,12 +359,7 @@ search_parser = subparsers.add_parser(
     "search", description="Search for keywords in elog files"
 )
 search_parser.add_argument(
-    "-w",
-    "--word",
-    required=True,
-    type=str,
-    action="store",
-    help="Word to search for",
+    "-w", "--word", required=True, type=str, action="store", help="Word to search for"
 )
 search_parser.set_defaults(func=elog_search)
 
