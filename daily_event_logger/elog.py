@@ -17,7 +17,7 @@ from rich.traceback import install
 
 install(show_locals=True)
 
-VERSION = "0.1.3"
+VERSION = "0.1.4"
 
 default_date = dt.date.today().strftime("%Y-%m-%d")
 ELOG_DIR = os.getenv("ELOG_DIR")
@@ -74,10 +74,10 @@ def elog_list(args):
     with open(selected_elog_file, "r") as ef:
         json_data = json.load(ef)
 
-    table = Table(style="#84562c", header_style="bold", box=box.ROUNDED)
-    table.add_column("Index", justify="right", style="#fb4934")
-    table.add_column("Timestamp", justify="left", style="#d62b00")
-    table.add_column("Message", justify="left", style="#e3d499")
+    table = Table(style="green", header_style="bold", box=box.ROUNDED)
+    table.add_column("Index", justify="right", style="white")
+    table.add_column("Timestamp", justify="left", style="red")
+    table.add_column("Message", justify="left")
 
     for i in range(len(json_data)):
         if json_data[i]["timestamp"] > ts_from and json_data[i]["timestamp"] < ts_to:
